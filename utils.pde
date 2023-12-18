@@ -1,0 +1,10 @@
+enum POINTER_TYPE {
+  NONE,
+  BRUSH
+};
+
+enum BRUSH_TYPE {
+  PEN,
+  SQUARE,
+  CIRCLE
+};
