@@ -1,6 +1,26 @@
 class Brush extends Pointer{
+  Runnable drawShape;
+  
+  Brush(){
+    super();
+    print(layer);
+    setShape(()->{
+      layer.ellipseMode(CORNER);
+      layer.ellipse( 0, 0, size.x, size.y);
+    });
+  }
+  
+  Brush(Runnable drawShape){
+    super();
+    setShape(drawShape);
+  }
+  
+  void setShape(Runnable drawShape){
+    this.drawShape = drawShape;
+  }
+  
   @Override
-  void draw(){
+  void updateLayer(){
     size.x = size.x<1?1:size.x;
     size.y = size.y<1?1:size.y;
     
@@ -10,30 +30,15 @@ class Brush extends Pointer{
       layer.clear();
       layer.stroke(fgColor);
       layer.fill(fgColor);
-      layer.ellipse(size.x/2, size.y/2, size.x, size.y);
+      //layer.ellipse(size.x/2, size.y/2, size.x, size.y);
+      if(drawShape!=null)
+        drawShape.run();
     layer.endDraw();
-    
+  }
+  
+  @Override
+  void draw(){
+    updateLayer();
     image(layer, mouseX - size.x/2,  mouseY - size.y/2);
-  }
-}
-
-class BrushShape {
-  Runnable drawShape;
-  PGraphics layer;
-  
-  BrushShape(Runnable drawShape){
-    layer = createGraphics(50,50);
-    this.drawShape = drawShape;
-  }
-  
-  PGraphics draw(){
-    layer.beginDraw();
-      layer.clear();
-      layer.stroke(fgColor);
-      layer.fill(fgColor);
-      drawShape.run();
-    layer.endDraw();
-    
-    return layer;
   }
 }

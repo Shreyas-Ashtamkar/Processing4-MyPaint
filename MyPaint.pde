@@ -16,7 +16,10 @@ void setup() {
   paintCanvas = new Canvas(width - 150, height - 150);
 
   p = new Pointer();
-  b = new Brush();
+  b = new Brush(()->{
+    b.layer.ellipseMode(CORNER);
+    b.layer.ellipse(0, 0, b.size.x, b.size.y);
+  });
 
   colorPallette = new ColorPallette(
     //PosX
@@ -48,13 +51,13 @@ void draw() {
   background(220);
 
   paintCanvas.draw();
-
   colorPallette.draw();
 
   if (pType == POINTER_TYPE.NONE)
     p.draw();
+    
   else if (pType == POINTER_TYPE.BRUSH)
-    if((mouseX > 0 && mouseX < paintCanvas.size.x) && (mouseY > 0 && mouseY < paintCanvas.size.y))
+    if(paintCanvas.isMouseInsideCanvas())
       b.draw();
 }
 

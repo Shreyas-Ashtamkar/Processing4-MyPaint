@@ -91,6 +91,10 @@ class Canvas extends PaintObject{
     layer.endDraw();
   }
   
+  boolean isMouseInsideCanvas(){
+    return (mouseX > 0 && mouseX < this.size.x) && (mouseY > 0 && mouseY < this.size.y);
+  }
+  
   void draw(Brush b){
     updateLayerDragged(b, new PVector(pmouseX, pmouseY), new PVector(mouseX, mouseY));
     super.draw();
