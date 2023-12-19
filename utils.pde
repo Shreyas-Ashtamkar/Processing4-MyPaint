@@ -8,3 +8,11 @@ enum BRUSH_TYPE {
   SQUARE,
   CIRCLE
 };
+
+void setColor(color c, PaintObject ...pObjects){
+    fgColor = c;
+    
+    //reinitialize relevant layers
+    for( PaintObject p : pObjects)
+      p.initLayer();
+}

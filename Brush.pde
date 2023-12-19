@@ -1,12 +1,10 @@
 class Brush extends Pointer{
-  color fillColor = color(0);
-  color borderColor = color(0);
-  
   @Override
-  void initLayer(){
+  void updateLayer(){
     layer.beginDraw();
-      layer.stroke(borderColor);
-      layer.fill(fillColor);
+      layer.clear();
+      layer.stroke(fgColor);
+      layer.fill(fgColor);
       layer.ellipse(size.x/2, size.y/2, size.x, size.y);
     layer.endDraw();
   }

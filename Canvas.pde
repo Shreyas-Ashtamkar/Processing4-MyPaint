@@ -1,42 +1,13 @@
 class Canvas extends PaintObject{
-  color 
-    bgColor = color(255), 
-    fgColor = color(0);
-  
   Canvas(float sizeX, float sizeY){
-     this(sizeX, sizeY, color(255));
-  }
-  
-  Canvas(float sizeX, float sizeY, color bgColor, color ...fgColor){
-    super(sizeX, sizeY);
-    setColors(
-      bgColor,
-      (fgColor.length == 0) ? color(0) : fgColor[0]
-    );
-  }
-  
-  void setBgColor(color bg){
-    this.bgColor = bg;
-    initLayer();
-  }
-  
-  void setFgColor(color fg){
-    this.fgColor = fg;
-    initLayer();
-  }
-    
-  void setColors(color bg, color fg){
-    this.bgColor = bg;
-    this.fgColor = fg;
-    initLayer();
+     super(sizeX, sizeY);
   }
   
   @Override
-  void initLayer(){
+  void updateLayer(){
     layer.beginDraw();
-      layer.background(g.backgroundColor);
-      layer.fill(bgColor);
       layer.noStroke();
+      layer.fill(bgColor);
       layer.rect(0, 0, size.x, size.y);
     layer.endDraw();
   }
@@ -84,7 +55,7 @@ class Canvas extends PaintObject{
         
         loopIncrement.x = 1;
         loopIncrement.y = 0;
-      } else if(abs(diffY) > abs(diffX)){
+      } else if(abs(diffY) >= abs(diffX)){
         if(diffY < 0){
           loopStart = end;
           loopEnd   = start;
@@ -110,9 +81,6 @@ class Canvas extends PaintObject{
         loopIncrement.y = mY;
       }
       
-      println("DIFFS  - ", diffY, diffX);
-      println("SLOPES - ", mY, mX);
-      
       if(diffX*diffY != 0)
         for(float y=loopStart.y, x=loopStart.x; y != loopEnd.y && x != loopEnd.x; y+=loopIncrement.y, x+=loopIncrement.x)
           layer.image(b.layer, x - b.size.x/2, y - b.size.y/2);
@@ -124,17 +92,7 @@ class Canvas extends PaintObject{
   }
   
   void draw(Brush b){
-    //updateLayer(b, mouseX, mouseY);
-    
     updateLayerDragged(b, new PVector(pmouseX, pmouseY), new PVector(mouseX, mouseY));
-    
-    super.draw();
-  }
-  
-  @Override()
-  void draw(){
-    if(frameCount == 1)
-      layer.background(0,0,0,0);
     super.draw();
   }
 }
