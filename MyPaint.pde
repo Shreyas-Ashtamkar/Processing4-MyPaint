@@ -1,140 +1,124 @@
-Canvas paintCanvas;
+Canvas paintCanvas; //<>//
 
 Pointer p;
 Brush b;
 
-Pallette colorPallette;
-Button btn1;
-ArrayList<Button> buttons = new ArrayList();
-
+ColorPallette colorPallette;
 
 POINTER_TYPE pType = POINTER_TYPE.NONE;
 
-color bgColor = color(255,255,0); 
+color bgColor = color(255, 255, 0);
 color fgColor = color(0);
 
-void setup(){
-  size(1400,900);
+void setup() {
+  size(1400, 900);
   //frameRate(2500);
   paintCanvas = new Canvas(width - 150, height - 150);
-  
+
   p = new Pointer();
   b = new Brush();
-  
-  colorPallette = new Pallette(width - 150, 0, 150, height - 150);
-  //btn1 = new Button(width - 140, 10, 40, 40);
-  //btn2 = new Button(width - 95, 10, 40, 40);
-  
-  buttons.add(new Button(width - 140, 10, 40, 40));
-  buttons.add(new Button(width - 95, 10, 40, 40));
-  buttons.add(new Button(width - 50, 10, 40, 40));
-  
-  buttons.add(new Button(width - 140, 55, 40, 40));
-  buttons.add(new Button(width - 95, 55, 40, 40));
-  buttons.add(new Button(width - 50, 55, 40, 40));
-  
-  buttons.add(new Button(width - 140, 100, 40, 40));
-  buttons.add(new Button(width - 95, 100, 40, 40));
-  buttons.add(new Button(width - 50, 100, 40, 40));
-  
-  buttons.add(new Button(width - 140, 145, 40, 40));
-  buttons.add(new Button(width - 95, 145, 40, 40));
-  buttons.add(new Button(width - 50, 145, 40, 40));
+
+  colorPallette = new ColorPallette(
+    //PosX
+    width - 150, 
+    //PosY
+    0, 
+    //SizeX
+    150, 
+    //SizeY
+    height - 150,
+    //ColorsList
+    color(#00ff00),
+    color(#0000ff),
+    color(#ff0000),
+    color(#ffff00),
+    color(#00ffff),
+    color(#ff00ff),
+    color(#000000),
+    color(#FF8F00),
+    color(#6900FF),
+    color(#98FF00),
+    color(#762200),
+    color(#ffffff)
+    
+  );
 }
 
-void draw(){
+void draw() {
   background(220);
-  
+
   paintCanvas.draw();
-  
+
   colorPallette.draw();
-  //btn1.draw();
-  //btn2.draw();
-  
-  for(Button b: buttons)
-    b.draw();
-  
-  if(pType == POINTER_TYPE.NONE)
+
+  if (pType == POINTER_TYPE.NONE)
     p.draw();
-  else if(pType == POINTER_TYPE.BRUSH)
-    b.draw();
+  else if (pType == POINTER_TYPE.BRUSH)
+    if((mouseX > 0 && mouseX < paintCanvas.size.x) && (mouseY > 0 && mouseY < paintCanvas.size.y))
+      b.draw();
 }
 
-void mouseClicked(){
-  if(mouseButton == CENTER) //<>//
+void mouseClicked() {
+  if (mouseButton == CENTER)
     pType = pType==POINTER_TYPE.BRUSH?POINTER_TYPE.NONE:POINTER_TYPE.BRUSH;
 }
 
-void mousePressed(){
-  if(mouseButton == CENTER) return;
-  
-  if(pType == POINTER_TYPE.BRUSH)
+void mousePressed() {
+  if (mouseButton == CENTER) return;
+
+  if (pType == POINTER_TYPE.BRUSH)
     paintCanvas.draw(b);
-  
-  //if(btn1.isClicked())
-  //  btn1.onClick();
-    
-  //if(btn2.isClicked())
-  //  btn2.onClick();
-  
-  for(Button btn: buttons)
-    if(btn.isClicked())
-      btn.onClick();
+
+  if(colorPallette.isClicked())
+    colorPallette.onClick();
 }
 
-void mouseDragged(){
-  if(mouseButton == CENTER) return;
-  if(pType == POINTER_TYPE.BRUSH)
+void mouseDragged() {
+  if (mouseButton == CENTER) return;
+  
+  if (pType == POINTER_TYPE.BRUSH)
     paintCanvas.draw(b);
 }
 
-void mouseReleased(){
-  //btn1.onRelease();
-  //btn2.onRelease();
-  for(Button btn: buttons)
-    if(btn.isClicked())
-      btn.onRelease();
+void mouseReleased() {
+  colorPallette.onRelease();
 }
 
 void mouseWheel(MouseEvent e) {
-  if(pType == POINTER_TYPE.BRUSH)
-    if(e.getCount() > 0)
+  if (pType == POINTER_TYPE.BRUSH)
+    if (e.getCount() > 0)
       b.decSize();
     else
       b.incSize();
 }
 
 void keyPressed() {
-  println(key);
-  if (key == 'g') {
-    setColor(color(0,255,0), b);
-  }
-  switch(key){
+  switch(key) {
     case 'w':
-      setColor(color(255, 255, 255), b);
+      setColor(color(255, 255, 255));
       break;
     case 'r':
-      setColor(color(255, 0, 0), b);
+      setColor(color(255, 0, 0));
       break;
     case 'g':
-      setColor(color(0, 255, 0), b);
+      setColor(color(0, 255, 0));
       break;
     case 'b':
-      setColor(color(0, 0, 255), b);
+      setColor(color(0, 0, 255));
       break;
     case 'c':
-      setColor(color(0, 255, 255), b);
+      setColor(color(0, 255, 255));
       break;
     case 'y':
-      setColor(color(255,255,0), b);
+      setColor(color(255, 255, 0));
       break;
     case 'm':
-      setColor(color(255, 0, 255), b);
+      setColor(color(255, 0, 255));
       break;
     case 'k':
-      setColor(color(0, 0, 0), b);
+      setColor(color(0, 0, 0));
       break;
     case 'e':
-      setColor(bgColor, b);
+      setColor(bgColor);
   }
 }

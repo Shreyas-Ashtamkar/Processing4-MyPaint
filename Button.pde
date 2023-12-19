@@ -3,6 +3,7 @@ class Button extends PaintObject{
   color buttonColor = color(255);
   boolean clicked = false;
   
+  Runnable onClickHandler;
   
   Button(){
      super(10, 10);
@@ -11,6 +12,12 @@ class Button extends PaintObject{
   Button(float posX, float posY, float sizeX, float sizeY){ //<>//
      super(sizeX, sizeY);
      setPos(posX, posY);
+  }
+  
+  Button(float posX, float posY, float sizeX, float sizeY, color c){
+     super(sizeX, sizeY);
+     setPos(posX, posY);
+     setColor(c);
   }
   
   void setPos(float posX, float posY){
@@ -41,6 +48,10 @@ class Button extends PaintObject{
     return this.clicked;
   }
   
+  void onClickHandler(Runnable r){
+    this.onClickHandler = r;
+  }
+  
   void onClick(){
     layer.beginDraw();
       layer.clear();
@@ -48,6 +59,7 @@ class Button extends PaintObject{
       layer.fill(buttonColor);
       layer.rect(5, 5, size.x, size.y);
     layer.endDraw();
+    onClickHandler.run();
   }
   
   void onRelease(){
