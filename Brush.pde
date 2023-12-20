@@ -3,16 +3,37 @@ class Brush extends Pointer{
   
   Brush(){
     super();
-    print(layer);
     setShape(()->{
       layer.ellipseMode(CORNER);
       layer.ellipse( 0, 0, size.x, size.y);
     });
   }
   
+  Brush(float size){
+    super();
+    setSize(size);
+    setShape(()->{
+      layer.ellipseMode(CORNER);
+      layer.ellipse( 0, 0, this.size.x, this.size.y);
+    });
+  }
+  
   Brush(Runnable drawShape){
     super();
     setShape(drawShape);
+  }
+  
+  Brush(Runnable drawShape, float size){
+    super();
+    setSize(size);
+    setShape(drawShape);
+  }
+  
+  Brush(Brush that){
+    super();
+    setShape(that.drawShape);
+    setSize(that.size.x, that.size.y);
+    print("Copied Object");
   }
   
   void setShape(Runnable drawShape){

@@ -92,7 +92,7 @@ class Canvas extends PaintObject{
   }
   
   boolean isMouseInsideCanvas(){
-    return (mouseX > 0 && mouseX < this.size.x) && (mouseY > 0 && mouseY < this.size.y);
+    return (mouseX > 0 && mouseX < this.size.x-5) && (mouseY > 0 && mouseY < this.size.y-5);
   }
   
   void draw(Brush b){

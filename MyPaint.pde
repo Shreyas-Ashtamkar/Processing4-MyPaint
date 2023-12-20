@@ -1,14 +1,21 @@
-Canvas paintCanvas; //<>//
+Canvas paintCanvas; //<>// //<>//
 
 Pointer p;
-Brush b;
+Brush globalBrush;
 
 ColorPallette colorPallette;
+BrushPallette brushType;
 
-POINTER_TYPE pType = POINTER_TYPE.NONE;
+POINTER_TYPE pType = POINTER_TYPE.BRUSH;
 
-color bgColor = color(255, 255, 0);
+color bgColor = color(255, 255, 255);
 color fgColor = color(0);
+
+float brushRotateAngle = 0;
+
+float rotateBrush(){
+  return brushRotateAngle+=0.3%PI;
+}
 
 void setup() {
   size(1400, 900);
@@ -16,11 +23,19 @@ void setup() {
   paintCanvas = new Canvas(width - 150, height - 150);
 
   p = new Pointer();
-  b = new Brush(()->{
-    b.layer.ellipseMode(CORNER);
-    b.layer.ellipse(0, 0, b.size.x, b.size.y);
-  });
-
+  globalBrush = new Brush(
+    ()->{
+      globalBrush.layer.pushMatrix();
+        globalBrush.layer.translate(globalBrush.size.x/2, globalBrush.size.y/2);
+        globalBrush.layer.rotate(PI/4);
+        globalBrush.layer.translate(-globalBrush.size.x/2, -globalBrush.size.y/2);
+        globalBrush.layer.line(0, 0, globalBrush.size.x, globalBrush.size.y);
+        //globalBrush.layer.rect(globalBrush.size.x/2-5, 0, 5, globalBrush.size.y);
+      globalBrush.layer.popMatrix();
+    },
+    50
+  );
+  
   colorPallette = new ColorPallette(
     //PosX
     width - 150, 
@@ -45,6 +60,13 @@ void setup() {
     color(#ffffff)
     
   );
+  
+  brushType = new BrushPallette(
+    0,
+    height-150,
+    width-150,
+    150
+  );
 }
 
 void draw() {
@@ -52,13 +74,19 @@ void draw() {
 
   paintCanvas.draw();
   colorPallette.draw();
-
-  if (pType == POINTER_TYPE.NONE)
+  brushType.draw();
+  
+  if (pType == POINTER_TYPE.NONE){
+    cursor(ARROW);
     p.draw();
-    
-  else if (pType == POINTER_TYPE.BRUSH)
-    if(paintCanvas.isMouseInsideCanvas())
-      b.draw();
+  } else if (pType == POINTER_TYPE.BRUSH)
+      if(paintCanvas.isMouseInsideCanvas()){
+        globalBrush.draw();
+        noCursor();
+      }
+      else
+        cursor(ARROW);
+
 }
 
 void mouseClicked() {
@@ -69,30 +97,38 @@ void mouseClicked() {
 void mousePressed() {
   if (mouseButton == CENTER) return;
 
-  if (pType == POINTER_TYPE.BRUSH)
-    paintCanvas.draw(b);
+  if (pType == POINTER_TYPE.BRUSH){
+    noCursor();
+    paintCanvas.draw(globalBrush);
+  }
+  else{
+    cursor(ARROW);
+  }
 
   if(colorPallette.isClicked())
     colorPallette.onClick();
+  else if(brushType.isClicked())
+    brushType.onClick();
 }
 
 void mouseDragged() {
   if (mouseButton == CENTER) return;
   
   if (pType == POINTER_TYPE.BRUSH)
-    paintCanvas.draw(b);
+    paintCanvas.draw(globalBrush);
 }
 
 void mouseReleased() {
   colorPallette.onRelease();
+  brushType.onRelease();
 }
 
 void mouseWheel(MouseEvent e) {
   if (pType == POINTER_TYPE.BRUSH)
     if (e.getCount() > 0)
-      b.decSize();
+      globalBrush.decSize();
     else
-      b.incSize();
+      globalBrush.incSize();
 }
 
 void keyPressed() {
