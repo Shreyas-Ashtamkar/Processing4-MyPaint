@@ -2,11 +2,7 @@ class Brush extends Pointer{
   Runnable drawShape;
   
   Brush(){
-    super();
-    setShape(()->{
-      layer.ellipseMode(CORNER);
-      layer.ellipse( 0, 0, size.x, size.y);
-    });
+    this(20);
   }
   
   Brush(float size){

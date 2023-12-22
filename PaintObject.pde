@@ -11,6 +11,10 @@ abstract class PaintObject{
      initLayer();
   }
   
+  float rotateBrush(){
+    return brushRotateAngle+=0.3%PI;
+  }
+  
   void initLayer(){
     //Normalize the Sizes to the constraints
     size.x = size.x<1?1:size.x;
@@ -34,16 +38,21 @@ abstract class PaintObject{
   }
   
   void incSize(){
-    size.x += 1;
-    size.y += 1;
-    initLayer();
+    incSize(1);
   }
   
   void decSize(){
-    size.x -= 1;
-    size.y -= 1;
-
+    incSize(-1);
+  }
+  
+  void incSize(float inc){
+    size.x += inc;
+    size.y += inc;
     initLayer();
+  }
+  
+  void decSize(float inc){
+    incSize(-inc);
   }
   
   void setSize(float x, float y){

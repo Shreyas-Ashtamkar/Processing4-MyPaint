@@ -12,7 +12,7 @@ class Button extends PaintObject{
      super(10, 10);
   }
   
-  Button(float posX, float posY, float sizeX, float sizeY){ //<>//
+  Button(float posX, float posY, float sizeX, float sizeY){ //<>// //<>//
      super(sizeX, sizeY);
      setPos(posX, posY);
   }
@@ -27,6 +27,12 @@ class Button extends PaintObject{
      super(sizeX, sizeY);
      setPos(posX, posY);
      setFaceImage(img);
+  }
+  
+  Button(float posX, float posY, float sizeX, float sizeY, Runnable handler){
+     super(sizeX, sizeY);
+     setPos(posX, posY);
+     onClickHandler(handler);
   }
   
   void setPos(float posX, float posY){

@@ -1,3 +1,4 @@
+float timer = 0;
 class Canvas extends PaintObject{
   Canvas(float sizeX, float sizeY){
      super(sizeX, sizeY);
@@ -81,18 +82,29 @@ class Canvas extends PaintObject{
         loopIncrement.y = mY;
       }
       
-      if(diffX*diffY != 0)
+      if(diffX*diffY != 0){
         for(float y=loopStart.y, x=loopStart.x; y != loopEnd.y && x != loopEnd.x; y+=loopIncrement.y, x+=loopIncrement.x)
-          layer.image(b.layer, x - b.size.x/2, y - b.size.y/2);
-      else
+          if(isInsideCanvas(x, y)){
+            println("Drawn ", timer++); //<>//
+            layer.image(b.layer, x - b.size.x/2, y - b.size.y/2);
+          }
+      }
+      else {
         for(float y=loopStart.y, x=loopStart.x; y <= loopEnd.y && x <= loopEnd.x; y+=loopIncrement.y, x+=loopIncrement.x)
-          layer.image(b.layer, x - b.size.x/2, y - b.size.y/2);
+          if(isInsideCanvas(x, y)){
+            layer.image(b.layer, x - b.size.x/2, y - b.size.y/2);
+          }
+      }
       
     layer.endDraw();
   }
   
   boolean isMouseInsideCanvas(){
-    return (mouseX > 0 && mouseX < this.size.x-5) && (mouseY > 0 && mouseY < this.size.y-5);
+    return isInsideCanvas(mouseX, mouseY);
+  }
+  
+  boolean isInsideCanvas(float x, float y){
+    return (x > 0 && x < (size.x)) && (y > 0 && y < (size.y));
   }
   
   void draw(Brush b){

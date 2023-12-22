@@ -11,41 +11,24 @@ POINTER_TYPE pType = POINTER_TYPE.BRUSH;
 color bgColor = color(255, 255, 255);
 color fgColor = color(0);
 
-float brushRotateAngle = 0;
-
-float rotateBrush(){
-  return brushRotateAngle+=0.3%PI;
-}
-
 void setup() {
   size(1400, 900);
-  //frameRate(2500);
-  paintCanvas = new Canvas(width - 150, height - 150);
+  paintCanvas = new Canvas(width - 151, height - 151);
 
   p = new Pointer();
   globalBrush = new Brush(
     ()->{
       globalBrush.layer.pushMatrix();
-        globalBrush.layer.translate(globalBrush.size.x/2, globalBrush.size.y/2);
-        globalBrush.layer.rotate(PI/4);
-        globalBrush.layer.translate(-globalBrush.size.x/2, -globalBrush.size.y/2);
-        globalBrush.layer.line(0, 0, globalBrush.size.x, globalBrush.size.y);
-        //globalBrush.layer.rect(globalBrush.size.x/2-5, 0, 5, globalBrush.size.y);
+        globalBrush.layer.ellipseMode(CORNER);
+        globalBrush.layer.ellipse(0, 0, globalBrush.size.x, globalBrush.size.y);
       globalBrush.layer.popMatrix();
     },
-    50
+    5
   );
   
   colorPallette = new ColorPallette(
-    //PosX
-    width - 150, 
-    //PosY
-    0, 
-    //SizeX
-    150, 
-    //SizeY
-    height - 150,
-    //ColorsList
+    width - 150,  0, 
+    150, height - 150,
     color(#00ff00),
     color(#0000ff),
     color(#ff0000),
@@ -62,10 +45,8 @@ void setup() {
   );
   
   brushType = new BrushPallette(
-    0,
-    height-150,
-    width-150,
-    150
+    0, height-150,
+    width-150, 150
   );
 }
 
@@ -79,13 +60,14 @@ void draw() {
   if (pType == POINTER_TYPE.NONE){
     cursor(ARROW);
     p.draw();
-  } else if (pType == POINTER_TYPE.BRUSH)
-      if(paintCanvas.isMouseInsideCanvas()){
-        globalBrush.draw();
-        noCursor();
-      }
-      else
-        cursor(ARROW);
+  } 
+  else if (pType == POINTER_TYPE.BRUSH)
+    if(paintCanvas.isMouseInsideCanvas()){
+      globalBrush.draw();
+      noCursor();
+    }
+    else
+      cursor(ARROW);
 
 }
 
@@ -126,9 +108,16 @@ void mouseReleased() {
 void mouseWheel(MouseEvent e) {
   if (pType == POINTER_TYPE.BRUSH)
     if (e.getCount() > 0)
-      globalBrush.decSize();
+      if(keyPressed && keyCode ==SHIFT)
+        globalBrush.decSize(globalBrush.size.x/4);
+      else
+        globalBrush.decSize();
+
     else
-      globalBrush.incSize();
+      if(keyPressed && keyCode ==SHIFT)
+        globalBrush.incSize(globalBrush.size.x/4);
+      else
+        globalBrush.incSize();
 }
 
 void keyPressed() {
@@ -159,5 +148,7 @@ void keyPressed() {
       break;
     case 'e':
       setColor(bgColor);
+    case 'a':
+      rotateBrush();
   }
 }
